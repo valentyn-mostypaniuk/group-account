@@ -1,0 +1,55 @@
+<p>group tree table works!</p>
+
+<p-treeTable #tt
+             [value]="files"
+             [columns]="cols"
+             [scrollable]="true"
+             scrollHeight="600px"
+             [virtualScroll]="true"
+             [virtualRowHeight]="40">
+
+
+  <ng-template pTemplate="caption">
+    <div style="text-align: right">
+      <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+      <input (input)="filterGlobal($event)"
+             pInputText placeholder="Global Filter"
+             size="50"
+             style="width:auto"
+             type="text">
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+    <tr>
+
+      <td *ngFor="let col of cols; let i = index">
+        <div class="title-wrapper">
+                <span *ngIf="rowData['type']==='Folder'"
+                      class="drag-drop-area"
+                      pDroppable="pnl"
+                      (onDrop)="drop($event,rowNode)">
+                </span>
+
+                <span *ngIf="rowData['type']==='Item-group'"
+                      class="drag-drop-area"
+                      pDraggable="pnl"
+                      (onDragStart)="dragStart($event,rowNode)"
+                      (onDragEnd)="dragEnd($event,rowNode)"
+                      (onDrag)="drag($event,rowNode)">
+                </span>
+          <div> <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+            <span>{{rowData[col.field]}}</span>
+          </div>
+             <div *ngIf="rowData['type']==='ParentFolder'">
+                 <p-button styleClass="p-button-primary" class="hide-btn" (onClick)="assign(rowNode)">Assign</p-button>
+             </div>
+          <div class="title-sum">{{rowData[col.sum]}}</div>
+        </div>
+      </td>
+
+    </tr>
+  </ng-template>
+</p-treeTable>
+
+
